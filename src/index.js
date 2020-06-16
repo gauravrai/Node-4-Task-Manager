@@ -4,7 +4,7 @@ const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
 
 const app = express()
-const port = process.env.port || PORT
+const port = process.env.port
 
 const multer = require('multer')
 const upload = multer({
