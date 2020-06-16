@@ -11,9 +11,9 @@ const upload = multer({
     dest: 'images'
 })
 
-app.post('/upload', upload.single('upload'), (req, res) => {
+app.get('/upload', (req, res) => {
 
-    res.send()
+    res.send({message: 'got it'})
 })
 
 
