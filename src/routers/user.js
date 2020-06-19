@@ -13,8 +13,8 @@ router.post('/users', async (req, res) => {
     try{
         await user.save()
         sendWelcomeEmail(user.email, user.name)
-        const token = user.generateAuthToken()
-
+        const token = await user.generateAuthToken()
+        
         res.status(201).send({
             user,
             token
@@ -67,9 +67,9 @@ router.get('/users/me', auth, async (req, res) => {
     try{
         const user = await User.findById(_id)
         if(user)
-            res.status(201).send(user)
+            res.send(user)
         else
-            res.status(404).send('Not found')
+            res.status(401).send('Not found')
     }
     catch(e){
         res.status(500).send('Internal server error 1')
@@ -89,7 +89,7 @@ router.patch('/users/me', auth, async (req, res) => {
         updates.forEach((update) => user[update] = req.body[update])
         await user.save()
         //update went fine
-        return res.status(201).send(user)
+        return res.send(user)
     }
     catch(e){
         res.status(500).send('Internal server error 2')
@@ -99,7 +99,7 @@ router.delete('/users/me', auth, async (req, res) => {
     try{
         await req.user.remove()
         sendCancellationEmail(req.user.email, req.user.name)
-        return res.status(404).send(req.user)
+        return res.send(req.user)
         
         res.send(user)
     }

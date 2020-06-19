@@ -11,9 +11,10 @@ router.post('/tasks', auth, async (req, res) => {
     })
     try{
         await task.save()
-        res.status(201).send(result)
+        res.status(201).send(task)
     }
     catch(e){
+        console.log(e)
         res.status(400).send(e)
     }
     
@@ -70,7 +71,7 @@ router.get('/tasks', auth, async (req, res) => {
                 sort
             }
         }).execPopulate()
-        res.status(201).send(req.user.tasks)
+        res.send(req.user.tasks)
     } catch(e){
         res.status(500).send('Internal server error')
     }
@@ -95,14 +96,19 @@ router.get('/tasks/:id', auth, async (req, res) => {
 })
 router.delete('/tasks/:id', auth, async (req, res) => {
     try{
-        const task = await Task.findByIdAndDelete({
+        const cTask = await Task.findOne({
             _id: req.params.id,
             owner: req.user._id
         })
-        if(!task){
-            return res.status(400).send()
+        if(!cTask){
+            return res.status(404).send()
         }
-        res.send(task)
+        const task = await Task.deleteOne({
+            _id: req.params.id,
+            owner: req.user._id
+        })
+        
+        res.send(cTask)
     }
     catch(e){
         res.status(500).send(e)

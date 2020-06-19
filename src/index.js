@@ -1,27 +1,5 @@
-const express = require('express')
-require('./db/mongoose')
-const userRouter = require('./routers/user')
-const taskRouter = require('./routers/task')
-
-const app = express()
+const app = require('./app')
 const port = process.env.port || PORT
-
-const multer = require('multer')
-const upload = multer({
-    dest: 'images'
-})
-
-app.get('/upload', (req, res) => {
-
-    res.send({message: 'got it'})
-})
-
-
-
-app.use(express.json())
-app.use(userRouter)
-app.use(taskRouter)
-
 
 app.listen(port, () => {
     console.log('Server is up ' + port)
